@@ -12,9 +12,12 @@ public class Peaklass {
         int arvutiLaevadeArv = 5;
         //Skeem kuidas mänguväli välja näha võiks
         /*while(m2ngijaLaevadeArv> 0 || arvutiLaevadeArv >0) {
-            mängija.pommita(arvuti.getTühiLaud());
+            // Mängija pommitab arvutit
+            arvuti.pommita();
             pront(arvuti.getTühiLaud());
-            arvuti.arvuti_pommita(mängija.getTühiLaud());
+            
+            // Arvuti pommitab mängijat
+            mängija.arvuti_pommita();
             pront(mängija.getTühiLaud());
         }*/
     }

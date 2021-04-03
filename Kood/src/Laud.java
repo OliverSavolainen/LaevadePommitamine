@@ -107,52 +107,52 @@ public class Laud {
         return true;
     }
 
-    public String[][] pommita(String[][] laud){
+    public String[][] pommita(){
         int x;
         int y;
         do{
             System.out.println("Rida: ");
             x = new Scanner(System.in).nextInt();
-        } while (x < 1 || x > laud.length);
+        } while (x < 1 || x > tühiLaud.length);
         do{
             System.out.println("Veerg: ");
             y = new Scanner(System.in).nextInt();
-        } while (y < 1 || y > laud.length);
-        if(!laud[x][y].equals(" ")){
-            laud[x][y] = "X";
+        } while (y < 1 || y > tühiLaud.length);
+        if(!tühiLaud[x][y].equals(" ")){
+            tühiLaud[x][y] = "X";
             System.out.println("Said pihta!");
         }
-        else if(laud[x][y].equals("X")||laud[x][y].equals("O")){
+        else if(tühiLaud[x][y].equals("X")||tühiLaud[x][y].equals("O")){
             System.out.println("Oled seda ruutu juba pommitanud! Vali uuesti.");
-            pommita(laud);
+            pommita();
         }
         else {
-            laud[x][y] = "O";
+            tühiLaud[x][y] = "O";
             System.out.println("Lasid mööda!");
         }
-        return laud;
+        return tühiLaud;
     }
 
-    public String[][] arvuti_pommita (String[][] laud){
+    public String[][] arvuti_pommita (){
         int x = (int)(Math.random() * (9 + 1));
         int y  = (int)(Math.random() * (9 + 1));
-        if(!laud[x][y].equals(" ")){
-            laud[x][y] = "X";
+        if(!tühiLaud[x][y].equals(" ")){
+            tühiLaud[x][y] = "X";
             System.out.println("Arvuti sai su laevale pihta!");
         }
-        else if(laud[x][y].equals("X")||laud[x][y].equals("O")){
-            arvuti_pommita(laud);
+        else if(tühiLaud[x][y].equals("X")||tühiLaud[x][y].equals("O")){
+            arvuti_pommita();
         }
         else {
-            laud[x][y] = "O";
+            tühiLaud[x][y] = "O";
             System.out.println("Arvuti lasi mööda!");
         }
-        return laud;
+        return tühiLaud;
     }
     //Meetod mis leiab kas mingit laeva veel esineb lauas
-    public boolean kasLeidub(String element,String[][] laud){
+    public boolean kasLeidub(String element){
         List<String> nimekiri = new ArrayList<String>();
-        for (String[] rida: laud) {
+        for (String[] rida: tühiLaud) {
             nimekiri.addAll(Arrays.asList(rida));
         }
         return nimekiri.contains(element);
