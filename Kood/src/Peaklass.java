@@ -16,7 +16,7 @@ public class Peaklass {
             pront(arvuti.laevadePaigutus());
             arvuti.arvuti_pommita(mängija.getTühiLaud());
             pront(mängija.laevadePaigutus());
-        } */
+        }*/
     }
     static void pront(String[][] m){
         System.out.println(Arrays.stream(m).map(Arrays::toString).collect(Collectors.joining("\n")));

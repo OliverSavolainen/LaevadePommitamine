@@ -113,11 +113,11 @@ public class Laud {
         do{
             System.out.println("Rida: ");
             x = new Scanner(System.in).nextInt();
-        } while (x < 1 || x > laud.length + 1);
+        } while (x < 1 || x > laud.length);
         do{
             System.out.println("Veerg: ");
             y = new Scanner(System.in).nextInt();
-        } while (y < 1 || y > laud.length + 1);
+        } while (y < 1 || y > laud.length);
         if(!laud[x][y].equals(" ")){
             laud[x][y] = "X";
             System.out.println("Said pihta!");
