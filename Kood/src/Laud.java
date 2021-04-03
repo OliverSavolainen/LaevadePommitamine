@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
 public class Laud {
     private String[][] tühiLaud = new String[10][10];
     private String mängijaNimi;
@@ -102,4 +107,54 @@ public class Laud {
         return true;
     }
 
+    public String[][] pommita(String[][] laud){
+        int x;
+        int y;
+        do{
+            System.out.println("Rida: ");
+            x = new Scanner(System.in).nextInt();
+        } while (x < 1 || x > laud.length + 1);
+        do{
+            System.out.println("Veerg: ");
+            y = new Scanner(System.in).nextInt();
+        } while (y < 1 || y > laud.length + 1);
+        if(!laud[x][y].equals(" ")){
+            laud[x][y] = "X";
+            System.out.println("Said pihta!");
+        }
+        else if(laud[x][y].equals("X")||laud[x][y].equals("O")){
+            System.out.println("Oled seda ruutu juba pommitanud! Vali uuesti.");
+            pommita(laud);
+        }
+        else {
+            laud[x][y] = "O";
+            System.out.println("Lasid mööda!");
+        }
+        return laud;
+    }
+
+    public String[][] arvuti_pommita (String[][] laud){
+        int x = (int)(Math.random() * (9 + 1));
+        int y  = (int)(Math.random() * (9 + 1));
+        if(!laud[x][y].equals(" ")){
+            laud[x][y] = "X";
+            System.out.println("Arvuti sai su laevale pihta!");
+        }
+        else if(laud[x][y].equals("X")||laud[x][y].equals("O")){
+            arvuti_pommita(laud);
+        }
+        else {
+            laud[x][y] = "O";
+            System.out.println("Arvuti lasi mööda!");
+        }
+        return laud;
+    }
+    //Meetod mis leiab kas mingit laeva veel esineb lauas
+    public boolean kasLeidub(String element,String[][] laud){
+        List<String> nimekiri = new ArrayList<String>();
+        for (String[] rida: laud) {
+            nimekiri.addAll(Arrays.asList(rida));
+        }
+        return nimekiri.contains(element);
+    }
 }
