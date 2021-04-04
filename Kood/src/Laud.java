@@ -2,16 +2,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Laud {
-    private String[][] tühiLaud = new String[10][10];
+
     private String mängijaNimi;
 
     public Laud(String mängijaNimi) {
         this.mängijaNimi = mängijaNimi;
     }
+    static void pront(String[][] m){
+        System.out.println(Arrays.stream(m).map(Arrays::toString).collect(Collectors.joining("\n")));
+    }
 
-    public String[][] getTühiLaud() {
+    public String[][] täidaLaud() {
+        String[][] tühiLaud = new String[10][10];
         for (int i = 0; i < tühiLaud.length; i++) {
             for (int j = 0; j < tühiLaud.length; j++) {
                 tühiLaud[i][j] = " ";
@@ -21,9 +26,9 @@ public class Laud {
         return tühiLaud;
     }
 
-    public String[][] laevadePaigutus() {
+    public String[][] laevadePaigutus(String[][] tühiLaud) {
         String[] tähistused = {"5", "4", "3", "2"};
-        tühiLaud = getTühiLaud();
+
         for (int i = 5; i > 1; i--) {
             int vert_koordinaat = (int) Math.round(Math.random() * 9);
             int hori_koordinaat = (int) Math.round(Math.random() * 9);
@@ -106,8 +111,7 @@ public class Laud {
         }
         return true;
     }
-
-    public String[][] pommita(){
+    public String[][] pommita(String[][] tühiLaud){
         int x;
         int y;
         do{
@@ -119,12 +123,20 @@ public class Laud {
             y = new Scanner(System.in).nextInt();
         } while (y < 1 || y > tühiLaud.length);
         if(!tühiLaud[x][y].equals(" ")){
-            tühiLaud[x][y] = "X";
             System.out.println("Said pihta!");
+            if (kasPõhjas(tühiLaud, tühiLaud[x][y])){
+                System.out.println("Laev põhjas!");
+                if (kasLäbi(tühiLaud)){
+                    System.out.println("Mäng läbi. Sina võitsid!");
+                    return null;
+                }
+            }
+            tühiLaud[x][y] = "X";
+            pommita(tühiLaud);
         }
         else if(tühiLaud[x][y].equals("X")||tühiLaud[x][y].equals("O")){
             System.out.println("Oled seda ruutu juba pommitanud! Vali uuesti.");
-            pommita();
+            pommita(tühiLaud);
         }
         else {
             tühiLaud[x][y] = "O";
@@ -133,15 +145,24 @@ public class Laud {
         return tühiLaud;
     }
 
-    public String[][] arvuti_pommita (){
+    public String[][] arvuti_pommita (String[][] tühiLaud){
         int x = (int)(Math.random() * (9 + 1));
         int y  = (int)(Math.random() * (9 + 1));
-        if(!tühiLaud[x][y].equals(" ")){
-            tühiLaud[x][y] = "X";
+        if(!tühiLaud[x][y].equals(" ") && !tühiLaud[x][y].equals("O") && !tühiLaud[x][y].equals("x")){
             System.out.println("Arvuti sai su laevale pihta!");
+            pront(tühiLaud);
+            if (kasPõhjas(tühiLaud, tühiLaud[x][y])){
+                System.out.println("Laev põhjas!");
+                if (kasLäbi(tühiLaud)){
+                    System.out.println("Mäng läbi. Arvuti võitis");
+                    return null;
+                }
+            }
+            tühiLaud[x][y] = "X";
+            arvuti_pommita(tühiLaud);
         }
         else if(tühiLaud[x][y].equals("X")||tühiLaud[x][y].equals("O")){
-            arvuti_pommita();
+            arvuti_pommita(tühiLaud);
         }
         else {
             tühiLaud[x][y] = "O";
@@ -150,11 +171,32 @@ public class Laud {
         return tühiLaud;
     }
     //Meetod mis leiab kas mingit laeva veel esineb lauas
-    public boolean kasLeidub(String element){
+    public boolean kasLeidub(String element,String[][] tühiLaud){
         List<String> nimekiri = new ArrayList<String>();
         for (String[] rida: tühiLaud) {
             nimekiri.addAll(Arrays.asList(rida));
         }
         return nimekiri.contains(element);
     }
+    public boolean kasPõhjas(String[][] tühiLaud, String laevaOsa){
+        for (int i = 0; i < tühiLaud.length; i++) {
+            for (int j = 0; j < tühiLaud.length; j++) {
+                if (tühiLaud[i][j].equals(laevaOsa)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean kasLäbi(String[][] tühiLaud){
+        for (int i = 0; i < tühiLaud.length; i++) {
+            for (int j = 0; j < tühiLaud.length; j++) {
+                if (!tühiLaud[i][j].equals("X") || !tühiLaud[i][j].equals("0") ){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }
