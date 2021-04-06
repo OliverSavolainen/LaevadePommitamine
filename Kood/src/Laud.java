@@ -111,17 +111,26 @@ public class Laud {
         }
         return true;
     }
+    /*
+     Meetod pommita võtab sisendiks mängulaua ja tagastab selle peale pommitamist.
+     Meetodis saab kasutaja ise valida koordinaate, mida pommitada. See on implementeeritud do/while tsükliga.
+     */
     public String[][] pommita(String[][] mänguLaud){
-        int x;
-        int y;
+        int x=0;
+        int y=0;
         do{
-            System.out.println("Rida: ");
-            x = new Scanner(System.in).nextInt();
-        } while (x < 1 || x > mänguLaud.length);
+            System.out.print("Rida: ");
+            Scanner skänner = new Scanner(System.in);
+            // Erindite püüdmiseks
+            if(skänner.hasNextInt())
+                x = skänner.nextInt();
+        } while (x < 1 || x > mänguLaud.length-1);
         do{
-            System.out.println("Veerg: ");
-            y = new Scanner(System.in).nextInt();
-        } while (y < 1 || y > mänguLaud.length);
+            System.out.print("Veerg: ");
+            Scanner sk2nner = new Scanner(System.in);
+            if(sk2nner.hasNextInt())
+                y = sk2nner.nextInt();
+        } while (y < 1 || y > mänguLaud.length-1);
         if(!mänguLaud[x][y].equals(" ")){
             System.out.println("Said pihta!");
             String tähis = mänguLaud[x][y];
@@ -162,6 +171,10 @@ public class Laud {
         mänguLaud[x][y] = "X";
         return mänguLaud;
     }
+    /*
+    Meetod arvuti_pommita võtab sisendiks mängulaua ja tagastab selle peale pommitamist.
+    Pommitatavad koordinaadid genereeritakse suvaliselt.
+     */
     public String[][] arvuti_pommita (String[][] mänguLaud){
         int x = (int)(Math.random() * (9 + 1));
         int y  = (int)(Math.random() * (9 + 1));
@@ -175,6 +188,7 @@ public class Laud {
                 y  = (int)(Math.random() * (9 + 1));
             }
         }
+        // Kui genereeritakse juba pommitatud koordinaadid, siis kutsutakse meetod uuesti välja.
         else if(mänguLaud[x][y].equals("X")||mänguLaud[x][y].equals("O")){
             arvuti_pommita(mänguLaud);
         }
@@ -186,7 +200,7 @@ public class Laud {
         pront(mänguLaud);
         return mänguLaud;
     }
-    //Meetod mis leiab kas mingit laeva veel esineb lauas
+    //Meetod mis leiab kas mingit laeva veel esineb lauas. Tagastab vastava tõeväärtuse.
     public boolean kasLeidub(String element,String[][] mänguLaud){
         List<String> nimekiri = new ArrayList<String>();
         for (String[] rida: mänguLaud) {
