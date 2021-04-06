@@ -117,12 +117,12 @@ public class Laud {
         do{
             System.out.println("Rida: ");
             x = new Scanner(System.in).nextInt();
-        } while (x < 1 || x > mänguLaud.length);
+        } while (x < 0 || x > mänguLaud.length);
         do{
             System.out.println("Veerg: ");
             y = new Scanner(System.in).nextInt();
-        } while (y < 1 || y > mänguLaud.length);
-        if(!mänguLaud[x][y].equals(" ")){
+        } while (y < 0 || y > mänguLaud.length);
+        if(!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")){
             System.out.println("Said pihta!");
             String tähis = mänguLaud[x][y];
             mänguLaud[x][y] = "X";
@@ -152,6 +152,8 @@ public class Laud {
         String tähis = mänguLaud[x][y];
         mänguLaud[x][y] = "X";
         pront(mänguLaud);
+        System.out.println("--------------------------------");
+        System.out.println("--------------------------------");
         if (kasPõhjas(mänguLaud, tähis)){
             System.out.println("Laev põhjas!");
             if (kasLäbi(mänguLaud)){
@@ -165,17 +167,12 @@ public class Laud {
     public String[][] arvuti_pommita (String[][] mänguLaud){
         int x = (int)(Math.random() * (9 + 1));
         int y  = (int)(Math.random() * (9 + 1));
-        if(!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")){
+        while(!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")){
             arvutiSaiPihta(mänguLaud,x,y);
             x = (int)(Math.random() * (9 + 1));
             y  = (int)(Math.random() * (9 + 1));
-            while (!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")){
-                arvutiSaiPihta(mänguLaud,x,y);
-                x = (int)(Math.random() * (9 + 1));
-                y  = (int)(Math.random() * (9 + 1));
-            }
         }
-        else if(mänguLaud[x][y].equals("X")||mänguLaud[x][y].equals("O")){
+        if(mänguLaud[x][y].equals("X")||mänguLaud[x][y].equals("O")){
             arvuti_pommita(mänguLaud);
         }
         else {
@@ -207,7 +204,7 @@ public class Laud {
     public boolean kasLäbi(String[][] mänguLaud){
         for (int i = 0; i < mänguLaud.length; i++) {
             for (int j = 0; j < mänguLaud.length; j++) {
-                if (!mänguLaud[i][j].equals("X") || !mänguLaud[i][j].equals("0") || !mänguLaud[i][j].equals(" ") ){
+                if (!mänguLaud[i][j].equals("X") && !mänguLaud[i][j].equals("0") && !mänguLaud[i][j].equals(" ") ){
                     return false;
                 }
             }
