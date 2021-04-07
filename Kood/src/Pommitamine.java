@@ -62,7 +62,7 @@ public class Pommitamine extends Laud {
         } else {
             mänguLaud[x][y] = "O";
             System.out.println("Lasid mööda!");
-            prindiLaud(mänguLaud);
+            //prindiLaud(mänguLaud);
         }
         return mänguLaud;
     }

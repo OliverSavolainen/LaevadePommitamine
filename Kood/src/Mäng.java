@@ -10,13 +10,14 @@ public class Mäng extends Pommitamine{
         String[][] mängijaLaud = täidaLaud();
         laevadePaigutus(arvutiLaud);
         laevadePaigutus(mängijaLaud);
+        System.out.println("Teie laud:");
         prindiLaud(mängijaLaud);
         while (!kasLäbi(arvutiLaud)){
-            pommita(mängijaLaud);
+            pommita(arvutiLaud);
             if (kasLäbi(mängijaLaud)) {
                 break;
             }
-            arvuti_pommita(arvutiLaud);
+            arvuti_pommita(mängijaLaud);
         }
     }
 
