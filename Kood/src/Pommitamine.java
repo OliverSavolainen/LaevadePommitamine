@@ -14,8 +14,8 @@ public class Pommitamine extends Laud {
      Siin meetodis saab kasutaja ise valida koordinaate, mida pommitada. See on implementeeritud do/while tsükliga.
      */
     public int[] mängijaltKoordinaadid(String[][] mänguLaud) {
-        int x = 0;
-        int y = 0;
+        int x =-1;
+        int y =-1;
         do {
             System.out.print("Rida: ");
             Scanner skänner = new Scanner(System.in);
