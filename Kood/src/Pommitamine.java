@@ -35,7 +35,7 @@ public class Pommitamine extends Laud {
     /*
     Meetod pommita võtab sisendiks mängulaua ja tagastab selle peale pommitamist. Kasutab mängijaltKoordinaadid meetodit
      */
-    public String[][] pommita(String[][] mänguLaud) {
+    public String[][] pommita(String[][] mänguLaud,String[][] nähtavLaud) {
         int x = 0;
         int y = 0;
         int[] xy = mängijaltKoordinaadid(mänguLaud);
@@ -45,6 +45,8 @@ public class Pommitamine extends Laud {
             System.out.println("Said pihta!");
             String tähis = mänguLaud[x][y];
             mänguLaud[x][y] = "X";
+            nähtavLaud[x][y] = "X";
+            prindiLaud(nähtavLaud);
             if (kasPõhjas(mänguLaud, tähis)) {
                 System.out.println("Laev põhjas!");
                 if (kasLäbi(mänguLaud)) {
@@ -58,11 +60,12 @@ public class Pommitamine extends Laud {
         }
         if (mänguLaud[x][y].equals("X") || mänguLaud[x][y].equals("O")) {
             System.out.println("Oled seda ruutu juba pommitanud! Vali uuesti.");
-            pommita(mänguLaud);
+            pommita(mänguLaud,nähtavLaud);
         } else {
             mänguLaud[x][y] = "O";
+            nähtavLaud[x][y] = "O";
             System.out.println("Lasid mööda!");
-            //prindiLaud(mänguLaud);
+            prindiLaud(nähtavLaud);
         }
         return mänguLaud;
     }
