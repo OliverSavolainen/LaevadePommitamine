@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Mäng extends Pommitamine{
     /**
@@ -10,6 +11,9 @@ public class Mäng extends Pommitamine{
         String[][] arvutiLaud = täidaLaud();
         String[][] mängijaLaud = täidaLaud();
         String[][] mängijaNäeb = täidaLaud();
+        ArrayList<String> arvutiAjalugu = new ArrayList<>();
+        arvutiAjalugu.add("0,0,0");
+        arvutiAjalugu.add("0,0,0");
         laevadePaigutus(arvutiLaud);
         laevadePaigutus(mängijaLaud);
         System.out.println("Teie laud:");
@@ -19,7 +23,7 @@ public class Mäng extends Pommitamine{
             if (kasLäbi(arvutiLaud)) {
                 break;
             }
-            arvuti_pommita(mängijaLaud);
+            arvutiPommitamine(mängijaLaud,arvutiAjalugu);
         }
     }
 

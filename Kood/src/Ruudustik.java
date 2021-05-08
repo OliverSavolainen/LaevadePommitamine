@@ -1,10 +1,12 @@
-package oop;
+/*package oop;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+
+import java.awt.*;
 
 public class Ruudustik extends Pane {
 
@@ -43,7 +45,7 @@ public class Ruudustik extends Pane {
                 if(vastaseLaud){
                     /* Lisada siia pommitamise kood
                     laud[x][y].setOnMouseClicked();
-                     */
+
                 }
             }
         }
@@ -56,3 +58,4 @@ public class Ruudustik extends Pane {
 
 
 }
+*/

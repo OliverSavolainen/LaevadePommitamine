@@ -1,4 +1,4 @@
-package oop;
+/*package oop;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -33,3 +33,4 @@ public class Graafika_Peaklass extends Application {
         launch(args);
     }
 }
+*/
