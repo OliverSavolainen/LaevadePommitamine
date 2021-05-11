@@ -1,12 +1,11 @@
-/*package oop;
+package oop;
 
-import javafx.scene.Node;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-
-import java.awt.*;
 
 public class Ruudustik extends Pane {
 
@@ -42,9 +41,20 @@ public class Ruudustik extends Pane {
                 laud[x][y].setStroke(Color.TRANSPARENT);
                 laud[x][y].setStrokeType(StrokeType.INSIDE);
                 laud[x][y].setStrokeWidth(1);
+                laud[x][y].setFill(Color.LIGHTBLUE);
                 if(vastaseLaud){
-                    /* Lisada siia pommitamise kood
-                    laud[x][y].setOnMouseClicked();
+                    int finalX = x;
+                    int finalY = y;
+                    laud[x][y].setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            /*
+                            Pane siia et kui pommitamisel tabab, muudab värvi vms
+                             */
+
+                            laud[finalX][finalY].setFill(Color.rgb(191,249,255,0.5));
+                        }
+                    });
 
                 }
             }
@@ -55,7 +65,4 @@ public class Ruudustik extends Pane {
         getChildren().add(laud[i][j]);
     }
 
-
-
 }
-*/
