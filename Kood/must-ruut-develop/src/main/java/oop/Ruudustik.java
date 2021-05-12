@@ -5,12 +5,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
+import java.io.IOException;
+
 public class Ruudustik extends Pane {
 
     private int pikkus;
     private int laius;
     private boolean vastaseLaud;
     private Rectangle[][] laud;
+    private Pommitamine pommitamine;
+    private boolean selleKäik = true;
+
+    public boolean isSelleKäik() {
+        return selleKäik;
+    }
 
     public int getPikkus() {
         return pikkus;
@@ -20,13 +28,17 @@ public class Ruudustik extends Pane {
         return laius;
     }
 
+    public void setSelleKäik(boolean selleKäik) {
+        this.selleKäik = selleKäik;
+    }
+
     //Konstruktor
-    public Ruudustik(int pikkus, int laius, boolean vastaseLaud) {
+    public Ruudustik(int pikkus, int laius, boolean vastaseLaud, Pommitamine pommitamine) {
         this.pikkus = pikkus;
         this.laius = laius;
         this.vastaseLaud = vastaseLaud;
+        this.pommitamine = pommitamine;
         laud = new Rectangle[laius][pikkus];
-
         // Initializes new board
         for (int x = 0; x < laius; x++) {
             for (int y = 0; y < pikkus; y++) {
@@ -43,12 +55,23 @@ public class Ruudustik extends Pane {
                     int finalX = x;
                     int finalY = y;
                     laud[x][y].setOnMouseClicked(event -> {
+                        if (selleKäik) {
                         /*
                         Pane siia et kui pommitamisel tabab, muudab värvi vms
                          */
                             laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
+                            try {
+                                selleKäik = pommitamine.pommita(finalX, finalY);
+
+                            } catch (KoordinaadiErind | IOException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+
                     });
 
+                } else {
+                    if (!pommitamine.getMänguLaud()[x][y].equals(" ")) laud[x][y].setFill(Color.rgb(191, 249, 255, 0.5));
                 }
             }
         }

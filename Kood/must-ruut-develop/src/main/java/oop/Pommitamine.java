@@ -8,33 +8,33 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Pommitamine extends Laud {
-
-
+    private String[][] mänguLaud;
     /**
      * Isendiväi, mis määrab, mis nimega on mängija/arvuti fail, kus kirjas pihtasaamised
      */
     public Pommitamine(String failiNimi) {
         super(failiNimi);
+        this.mänguLaud = laevadePaigutus(täidaLaud());
     }
 
     /*
       Meetod pommita võtab parameetriteks laua ja ruudu koordinaadid, millele mängija klikkis, kontrollib, mis on selle ruudu väärtuseks, märgib selle vastava tuelmusega ja tagastab selle, kui see pole
       varem pommitatud ruut ja viskab erindi, kui on
     */
-    public String pommita(String[][] mänguLaud, int x, int y) throws KoordinaadiErind, IOException {
-        String tulemus = "";
+    public boolean pommita(int x, int y) throws KoordinaadiErind, IOException {
+        boolean tulemus = true;
         if (!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")) {
             System.out.println("Said pihta!");
-            tulemus = mänguLaud[x][y];
+            String laev = mänguLaud[x][y];
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFailiNimi(),true), StandardCharsets.UTF_8))) {
-                bw.write(tulemus);
+                bw.write(laev + System.lineSeparator());
             }
             mänguLaud[x][y] = "X";
         } else if (mänguLaud[x][y].equals("X") || mänguLaud[x][y].equals("O")) {
             throw new KoordinaadiErind("Juba pommitasid seda");
         } else {
             mänguLaud[x][y] = "O";
-            tulemus = "0";
+            tulemus = false;
 
         }
         return tulemus;
@@ -42,26 +42,25 @@ public class Pommitamine extends Laud {
 
     /**
      *
-     * @param mänguLaud
      * @param ajalugu käikude ajaloo List, kus Stringina x ja y-koordinaat ja käik/olukord, mida kasutatakse järgmiste koordinaatide leidmiseks
      * @throws IOException failist lugemise ja sinna kirjutamise tõttu
      * saab faili põhjal viimaste käikude andmed, ssab järgmineKoordinaat meetodist uued koordinaadid, pommitab sinna
      * Kui saab pihta, pommitab uuesti ja kirjutab faili pihtasaanud laeva numbri ning kontrollib, kas laev põhjas ja kui on, kontrollib, kas mäng läbi
      * Kui lõpuks eksib, siis lisab ajalukku tähise, mis näitab kas lihtsalt viimast käiku või viimast pihtasaamist, mille ümber pommitatakse
      */
-    public String[][] arvutiPommitamine(String[][] mänguLaud,List<String> ajalugu) throws IOException {
-        int[] järgmiseAndmed = järgmineKoordinaat(ajalugu.get(ajalugu.size() - 1), mänguLaud, ajalugu.get(ajalugu.size() - 2));
+    public String[][] arvutiPommitamine(List<String> ajalugu) throws IOException {
+        int[] järgmiseAndmed = järgmineKoordinaat(ajalugu.get(ajalugu.size() - 1), ajalugu.get(ajalugu.size() - 2));
         int x = järgmiseAndmed[0];
         int y = järgmiseAndmed[1];
         int kord = järgmiseAndmed[2];
         if (!mänguLaud[x][y].equals(" ")) {
             String laev = mänguLaud[x][y];
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFailiNimi(),true), StandardCharsets.UTF_8))) {
-                bw.write(laev);
+                bw.write(laev  + System.lineSeparator());
             }
             mänguLaud[x][y] = "X";
-            if (kasPõhjas(mänguLaud, laev)) {
-                if (kasLäbi(mänguLaud)) {
+            if (kasPõhjas( laev)) {
+                if (kasLäbi()) {
                     return mänguLaud;
                 }
             } else if (kord == 0) {
@@ -70,7 +69,7 @@ public class Pommitamine extends Laud {
             } else {
                 ajalugu.add(x + "," + y + "," + "5");
             }
-            arvutiPommitamine(mänguLaud, ajalugu);
+            arvutiPommitamine(ajalugu);
         } else {
             mänguLaud[x][y] = "O";
             int valik = Integer.parseInt(ajalugu.get(ajalugu.size() - 1).split(",")[2]);
@@ -105,7 +104,7 @@ public class Pommitamine extends Laud {
      * 5: mitu korda on järjest pihta saadud ja jätkatakse samas suunas pihta saamisega
      * 0: viimane kord lasti randomilt või 4. case juures mööda (või oli 4.case ruut juba pommitatud) ja genereeritakse uued koordinaadid
      */
-    public int[] järgmineKoordinaat(String eelmine, String[][] mänguLaud, String üleelmine) {
+    public int[] järgmineKoordinaat(String eelmine, String üleelmine) {
         String[] osad = eelmine.split(",");
         int x = Integer.parseInt(osad[0]);
         int y = Integer.parseInt(osad[1]);
@@ -167,7 +166,7 @@ public class Pommitamine extends Laud {
     /**
      * Kontrollib laua/mängija logifailist, kas pihtasaadud laeva numbrile on vastavalt see arv kordi pihta saadud ehk kas laev põhjas
      */
-    public boolean kasPõhjas(String[][] mänguLaud, String laevaOsa) throws IOException {
+    public boolean kasPõhjas(String laevaOsa) throws IOException {
         int laevuPommitatud = 0;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(getFailiNimi()), StandardCharsets.UTF_8))) {
             String rida;
@@ -178,10 +177,14 @@ public class Pommitamine extends Laud {
         return laevuPommitatud == Integer.parseInt(laevaOsa);
     }
 
+    public String[][] getMänguLaud() {
+        return mänguLaud;
+    }
+
     /**
      * Kontrollib, kas failis 14 rida, sest täpselt nii palju on laevade osi/ruute laual
      */
-    public boolean kasLäbi(String[][] mänguLaud) throws IOException {
+    public boolean kasLäbi() throws IOException {
         int laevuPommitatud = 0;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(getFailiNimi()), StandardCharsets.UTF_8))) {
             while (br.readLine() != null) {

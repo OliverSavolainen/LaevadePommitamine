@@ -2,6 +2,7 @@
 package oop;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Graafika_Peaklass extends Application {
+    boolean vastaseKäik = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -30,10 +32,15 @@ public class Graafika_Peaklass extends Application {
         primaryStage.show();
     }
 
-    private GridPane mäng() throws IOException {
+    private GridPane mäng() throws IOException, InterruptedException {
         GridPane juur = new GridPane();
-        Ruudustik minuLaud = new Ruudustik(10, 10, false);
-        Ruudustik vastaseLaud = new Ruudustik(10, 10, true);
+        Pommitamine mängija = new Pommitamine("log1.txt");
+        Pommitamine arvuti = new Pommitamine("log2.txt");
+        List<String> ajalugu = new ArrayList<>();
+        ajalugu.add("0,0,0");
+        ajalugu.add("0,0,0");
+        Ruudustik minuLaud = new Ruudustik(10, 10, false, arvuti);
+        Ruudustik vastaseLaud = new Ruudustik(10, 10, true, mängija);
         //Vahed ekraani äärte vahel
         juur.setPadding(new Insets(10, 10, 10, 10));
         //Vahed elementide vahel
@@ -73,7 +80,7 @@ public class Graafika_Peaklass extends Application {
                 Kui lasete ise või arvuti laseb laeva põhja, tuleb selle kohta sõnum
                 ja kui mäng lõppeb, siis tuleb ka selle kohta sõnum.
                 """);
-        Label tegevus = new Label("Vastane sai pihta!");
+        Label tegevus = new Label("Sinu käik");
         tegevus.setTextFill(Color.RED);
         tegevus.setFont(Font.font("Verdana", 20));
         Silt tegevusesilt = new Silt(tegevus);
@@ -82,7 +89,7 @@ public class Graafika_Peaklass extends Application {
         skooritekstid.add(vahe, 0, 1);
         skooritekstid.add(laevade_arv_Vastane, 0, 2);
         skooritekstid.add(vahe2, 0, 3);
-        skooritekstid.add(tegevusesilt.getSilt(),0,4);
+        skooritekstid.add(tegevusesilt.getSilt(), 0, 4);
         skooritekstid.add(tutvustus, 0, 5);
         tutvustus.setAlignment(Pos.BOTTOM_CENTER);
         juur.add(skooritekstid, 2, 1);
@@ -94,45 +101,40 @@ public class Graafika_Peaklass extends Application {
         vahe.setAlignment(Pos.CENTER);
         juur.add(minu_tekst, 0, 0);
         juur.add(vastase_tekst, 1, 0);
-        Pommitamine mängija = new Pommitamine("log1.txt");
-        String[][] mängijaLaud = mängija.täidaLaud();
-        mängija.laevadePaigutus(mängijaLaud);
-        Pommitamine arvuti = new Pommitamine("log2.txt");
-        String[][] arvutiLaud = arvuti.täidaLaud();
-        arvuti.laevadePaigutus(arvutiLaud);
-        List<String> ajalugu = new ArrayList<>();
-        ajalugu.add("0,0,0");
-        ajalugu.add("0,0,0");
-        while (!mängija.kasLäbi(mängijaLaud)) {
-            tegevus.setText("Sinu käik");
-            AtomicReference<String> viimane = new AtomicReference<>("");
-            while (!viimane.get().equals("0")) {
-                vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, me -> {
-                    int x = (int) me.getSceneX();
-                    int y = (int) me.getSceneY();
+        vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                if (!vastaseLaud.isSelleKäik()) {
+                    tegevus.setText("Arvuti käik");
                     try {
-                        viimane.set(mängija.pommita(arvutiLaud, x, y));
-
-                    } catch (IOException | KoordinaadiErind e) {
-                        tegevus.setText("Juba pommitasid seda");
+                        mängija.arvutiPommitamine(ajalugu);
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
                     }
-                });
-                if (mängija.kasLäbi(arvutiLaud)) {
-                    tegevus.setText("Mäng läbi, sina võitsid!");
-                    vastaseLaud.setVisible(false);
-                    System.exit(0);
-
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    try {
+                        if (arvuti.kasLäbi()) {
+                            tegevus.setText("Kaotasid");
+                            System.exit(0);
+                        } else {
+                            tegevus.setText("Sinu käik");
+                            vastaseLaud.setSelleKäik(true);
+                        }
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
-            tegevus.setText("Arvuti käik");
+        });
 
-            arvuti.arvutiPommitamine(mängijaLaud, ajalugu);
-        }
         return juur;
     }
 
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         launch(args);
     }
 }
