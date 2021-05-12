@@ -1,26 +1,18 @@
-import java.util.Arrays;
+package oop;
+
 public class Laud {
 
-    private String mängijaNimi;
+    private final String failiNimi;
 
-    public String getMängijaNimi() {
-        return mängijaNimi;
+    public String getFailiNimi() {
+        return failiNimi;
     }
 
     /**
-     * Isendiväli, mis personaliseerib mängu nime kohta
+     * Isendiväi, mis määrab, mis nimega on mängija/arvuti fail, kus kirjas pihtasaamised
      */
-    public Laud(String mängijaNimi) {
-        this.mängijaNimi = mängijaNimi;
-    }
-
-    /**
-     * Meetod, mis arusaadavalt prindib välja laua hetkeolukorra
-     */
-    static void prindiLaud(String[][] mänguLaud){
-        for (String[] rida: mänguLaud) {
-            System.out.println(Arrays.toString(rida));
-        }
+    public Laud(String failiNimi) {
+        this.failiNimi = failiNimi;
     }
 
     /**
@@ -79,7 +71,6 @@ public class Laud {
                         mänguLaud[vert_koordinaat][hori_koordinaat - j] = vastavTähistus;
                     }
                 }
-
             }
 
 

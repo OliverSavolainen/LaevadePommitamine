@@ -1,3 +1,5 @@
+package oop;
+
 import java.util.ArrayList;
 
 public class Mäng extends Pommitamine{
@@ -6,7 +8,8 @@ public class Mäng extends Pommitamine{
      * Siis on tsükkel, mis vaatab, kas arvuti on võitnud esialgu, siis laseb mängijal pommitada, kontrollib, kas mängija võitis
      * ning kui pole, siis annab arvutile korra pommitada
      * mängijaNäeb laud näitab, kuhu mängija on pommitanud
-     */
+     **/
+    /*
     public void mäng() {
         String[][] arvutiLaud = täidaLaud();
         String[][] mängijaLaud = täidaLaud();
@@ -19,14 +22,13 @@ public class Mäng extends Pommitamine{
         System.out.println("Teie laud:");
         prindiLaud(mängijaLaud);
         while (!kasLäbi(mängijaLaud)){
-            pommita(arvutiLaud,mängijaNäeb);
             if (kasLäbi(arvutiLaud)) {
                 break;
             }
             arvutiPommitamine(mängijaLaud,arvutiAjalugu);
         }
     }
-
+    */
     public Mäng(String mängijaNimi) {
         super(mängijaNimi);
     }
