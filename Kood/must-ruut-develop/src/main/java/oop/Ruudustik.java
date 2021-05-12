@@ -20,6 +20,10 @@ public class Ruudustik extends Pane {
         return selleKäik;
     }
 
+    public Rectangle[][] getLaud() {
+        return laud;
+    }
+
     public int getPikkus() {
         return pikkus;
     }
@@ -55,23 +59,24 @@ public class Ruudustik extends Pane {
                     int finalX = x;
                     int finalY = y;
                     laud[x][y].setOnMouseClicked(event -> {
-                        if (selleKäik) {
                         /*
                         Pane siia et kui pommitamisel tabab, muudab värvi vms
                          */
-                            laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
-                            try {
-                                selleKäik = pommitamine.pommita(finalX, finalY);
 
-                            } catch (KoordinaadiErind | IOException e) {
-                                System.out.println(e.getMessage());
-                            }
+                        try {
+                            selleKäik = pommitamine.pommita(finalX, finalY);
+                            if (!selleKäik) laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
+                            else laud[finalX][finalY].setFill(Color.GREEN);
+
+                        } catch (KoordinaadiErind | IOException e) {
+                            System.out.println(e.getMessage());
                         }
 
                     });
 
                 } else {
-                    if (!pommitamine.getMänguLaud()[x][y].equals(" ")) laud[x][y].setFill(Color.rgb(191, 249, 255, 0.5));
+                    if (!pommitamine.getMänguLaud()[x][y].equals(" "))
+                        laud[x][y].setFill(Color.rgb(191, 249, 255, 0.5));
                 }
             }
         }

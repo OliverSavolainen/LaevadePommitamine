@@ -104,15 +104,20 @@ public class Graafika_Peaklass extends Application {
         vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 if (!vastaseLaud.isSelleKäik()) {
-                    tegevus.setText("Arvuti käik");
                     try {
+                        tegevus.setText("Arvuti käik");
                         mängija.arvutiPommitamine(ajalugu);
+                        for (int i = 0; i < 10; i++) {
+                            for (int j = 0; j < 10; j++) {
+                                if (mängija.getMänguLaud()[i][j].equals("O")){
+                                    minuLaud.getLaud()[i][j].setFill(Color.RED);
+                                }
+                                if (mängija.getMänguLaud()[i][j].equals("X")){
+                                    minuLaud.getLaud()[i][j].setFill(Color.BLACK);
+                                }
+                            }
+                        }
                     } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
                         System.out.println(e.getMessage());
                     }
                     try {

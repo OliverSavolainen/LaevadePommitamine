@@ -53,7 +53,7 @@ public class Pommitamine extends Laud {
         int x = järgmiseAndmed[0];
         int y = järgmiseAndmed[1];
         int kord = järgmiseAndmed[2];
-        if (!mänguLaud[x][y].equals(" ")) {
+        if (!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("X") && !mänguLaud[x][y].equals("O")) {
             String laev = mänguLaud[x][y];
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFailiNimi(),true), StandardCharsets.UTF_8))) {
                 bw.write(laev  + System.lineSeparator());
@@ -65,7 +65,6 @@ public class Pommitamine extends Laud {
                 }
             } else if (kord == 0) {
                 ajalugu.add(x + "," + y + "," + "1");
-                System.out.println(ajalugu);
             } else {
                 ajalugu.add(x + "," + y + "," + "5");
             }
@@ -132,7 +131,7 @@ public class Pommitamine extends Laud {
             case 4:
                 y--;
                 if (y < 0 || mänguLaud[x][y].equals("X") || mänguLaud[x][y].equals("0")) {
-                    x--;
+                    y++;
                     kord = 0;
                 } else break;
             case 5: {
@@ -191,6 +190,6 @@ public class Pommitamine extends Laud {
                 laevuPommitatud++;
             }
         }
-        return laevuPommitatud == 14;
+        return laevuPommitatud >= 14;
     }
 }
