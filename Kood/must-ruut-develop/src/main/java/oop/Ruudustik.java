@@ -62,14 +62,15 @@ public class Ruudustik extends Pane {
                         /*
                         Pane siia et kui pommitamisel tabab, muudab värvi vms
                          */
+                        if (selleKäik) {
+                            try {
+                                selleKäik = pommitamine.pommita(finalX, finalY);
+                                if (!selleKäik) laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
+                                else laud[finalX][finalY].setFill(Color.GREEN);
 
-                        try {
-                            selleKäik = pommitamine.pommita(finalX, finalY);
-                            if (!selleKäik) laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
-                            else laud[finalX][finalY].setFill(Color.GREEN);
-
-                        } catch (KoordinaadiErind | IOException e) {
-                            System.out.println(e.getMessage());
+                            } catch (KoordinaadiErind | IOException e) {
+                                System.out.println(e.getMessage());
+                            }
                         }
 
                     });

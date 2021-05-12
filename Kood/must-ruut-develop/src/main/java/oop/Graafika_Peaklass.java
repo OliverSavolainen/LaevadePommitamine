@@ -109,13 +109,13 @@ public class Graafika_Peaklass extends Application {
                 if (!vastaseLaud.isSelleKäik()) {
                     try {
                         tegevus.setText("Arvuti käik");
-                        mängija.arvutiPommitamine(ajalugu);
+                        arvuti.arvutiPommitamine(ajalugu);
                         for (int i = 0; i < 10; i++) {
                             for (int j = 0; j < 10; j++) {
-                                if (mängija.getMänguLaud()[i][j].equals("O")){
+                                if (arvuti.getMänguLaud()[i][j].equals("O")){
                                     minuLaud.getLaud()[i][j].setFill(Color.RED);
                                 }
-                                if (mängija.getMänguLaud()[i][j].equals("X")){
+                                if (arvuti.getMänguLaud()[i][j].equals("X")){
                                     minuLaud.getLaud()[i][j].setFill(Color.BLACK);
                                 }
                             }
@@ -129,10 +129,12 @@ public class Graafika_Peaklass extends Application {
                             System.exit(0);
                         } else {
                             tegevus.setText("Sinu käik");
-                            vastaseLaud.setSelleKäik(true);
+
                         }
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
+                    }finally {
+                        vastaseLaud.setSelleKäik(true);
                     }
                 }
             }

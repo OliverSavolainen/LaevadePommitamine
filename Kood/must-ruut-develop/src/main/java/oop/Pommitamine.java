@@ -24,7 +24,6 @@ public class Pommitamine extends Laud {
     public boolean pommita(int x, int y) throws KoordinaadiErind, IOException {
         boolean tulemus = true;
         if (!mänguLaud[x][y].equals(" ") && !mänguLaud[x][y].equals("O") && !mänguLaud[x][y].equals("X")) {
-            System.out.println("Said pihta!");
             String laev = mänguLaud[x][y];
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFailiNimi(),true), StandardCharsets.UTF_8))) {
                 bw.write(laev + System.lineSeparator());
