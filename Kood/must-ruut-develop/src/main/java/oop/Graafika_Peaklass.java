@@ -28,8 +28,11 @@ public class Graafika_Peaklass extends Application {
         Scene stseen = new Scene(mäng());
         primaryStage.setScene(stseen);
         primaryStage.setTitle("Laevade pommitamine");
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        primaryStage.sizeToScene();
         primaryStage.show();
+        primaryStage.setMinWidth(primaryStage.getWidth());
+        primaryStage.setMinHeight(primaryStage.getHeight());
     }
 
     private GridPane mäng() throws IOException, InterruptedException {

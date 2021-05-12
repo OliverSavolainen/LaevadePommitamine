@@ -47,10 +47,10 @@ public class Ruudustik extends Pane {
         for (int x = 0; x < laius; x++) {
             for (int y = 0; y < pikkus; y++) {
                 laud[x][y] = new Rectangle();
-                laud[x][y].setWidth(50);
-                laud[x][y].setHeight(50);
-                laud[x][y].setX(x * 50);
-                laud[x][y].setY(y * 50);
+                laud[x][y].setWidth(40);
+                laud[x][y].setHeight(40);
+                laud[x][y].setX(x * 40);
+                laud[x][y].setY(y * 40);
                 laud[x][y].setStroke(Color.TRANSPARENT);
                 laud[x][y].setStrokeType(StrokeType.INSIDE);
                 laud[x][y].setStrokeWidth(1);
