@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -61,16 +62,6 @@ public class Graafika_Peaklass extends Application {
         juur.add(minuLaud, 0, 1);
         juur.add(vastaseLaud, 1, 1);
 
-        Label laevade_arv_Minu = new Label("Minu laevi: ");
-        laevade_arv_Minu.setFont(Font.font(25));
-        Label vahe = new Label("--------------------------------------");
-        vahe.setFont(Font.font(25));
-        Label laevade_arv_Vastane = new Label("Vastase laevi: ");
-        laevade_arv_Vastane.setFont(Font.font(25));
-        Label vahe2 = new Label("--------------------------------------");
-        vahe2.setFont(Font.font(25));
-        Label minu_tekst = new Label("Minu laud");
-        Label vastase_tekst = new Label("Vastase laud");
         Label tutvustus = new Label("""
                 Teie laud luuakse randomi alusel (näete seda vasakul)
                 ja siis saate hakata mängima arvuti vastu.
@@ -87,36 +78,46 @@ public class Graafika_Peaklass extends Application {
                 """);
         tutvustus.setFont(Font.font("Verdana", 15));
         GridPane skooritekstid = new GridPane();
-        skooritekstid.add(laevade_arv_Minu, 0, 0);
-        skooritekstid.add(vahe, 0, 1);
-        skooritekstid.add(laevade_arv_Vastane, 0, 2);
-        skooritekstid.add(vahe2, 0, 3);
-        skooritekstid.add(tutvustus, 0, 5);
+        skooritekstid.add(tutvustus, 0, 0);
         Label silt = new Label("Sina võitsid");
-        Label võit = new Label("Sina võitsid");
+        silt.setFont(Font.font("Verdana",20));
         Silt popupiSilt = new Silt(silt);
-        Popup popup = new Popup();
-        popup.getContent().add(võit);
-        popup.setAutoHide(true);
-        popup.centerOnScreen();
+        FlowPane pane = new FlowPane(10, 10);
+        VBox popup = new VBox(popupiSilt.getSilt(),pane);
+        popup.setAlignment(Pos.CENTER);
+        Scene stseen2 = new Scene(popup,500,100);
+        Stage abi = new Stage();
         tutvustus.setAlignment(Pos.BOTTOM_CENTER);
         juur.add(skooritekstid, 2, 1);
-        minu_tekst.setFont(Font.font(15));
-        vastase_tekst.setFont(Font.font(15));
-        minu_tekst.setAlignment(Pos.CENTER);
-        vastase_tekst.setAlignment(Pos.CENTER);
-        vahe.setAlignment(Pos.CENTER);
-        vahe.setAlignment(Pos.CENTER);
-        juur.add(minu_tekst, 0, 0);
-        juur.add(vastase_tekst, 1, 0);
+
 
 
         primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent event) {
+                // väljudes kustutatakse andmed failidest, mis mängu olukorda kontrollivad
+                PrintWriter pw = null;
+                try {
+                    pw = new PrintWriter(arvuti.getFailiNimi());
+                } catch (FileNotFoundException e) {
+                    popupiSilt.muudaSõnumit("Failierind!");
+                    abi.setScene(stseen2);
+                    abi.show();
+                }
+                pw.close();
+                PrintWriter pw2 = null;
+                try {
+                    pw2 = new PrintWriter(mängija.getFailiNimi());
+                } catch (FileNotFoundException e) {
+                    popupiSilt.muudaSõnumit("Failierind!");
+                    abi.setScene(stseen2);
+                    abi.show();
+                }
+                pw2.close();
                 // luuakse teine lava
                 Stage kusimus = new Stage();
                 // küsimuse ja kahe nupu loomine
                 Label label = new Label("Kas tõesti tahad kinni panna?");
+                Label label2 = new Label("Kui mäng sai läbi, on Ei vajutades sul võimalik edasi pommitada lihtsalt lõbuks");
                 Button okButton = new Button("Jah");
                 Button cancelButton = new Button("Ei");
 
@@ -143,7 +144,7 @@ public class Graafika_Peaklass extends Application {
                 // küsimuse ja nuppude gruppi paigutamine
                 VBox vBox = new VBox(10);
                 vBox.setAlignment(Pos.CENTER);
-                vBox.getChildren().addAll(label, pane);
+                vBox.getChildren().addAll(label, pane,label2);
 
                 //stseeni loomine ja näitamine
                 Scene stseen2 = new Scene(vBox);
@@ -152,25 +153,14 @@ public class Graafika_Peaklass extends Application {
             }
         });
 
+        /*
+        EventHandler selle kohta, mis juhtub, kui mängija vajutab ruudule laual. Kontrollitakse, kas mäng on läbi, kui ei ole, siis toimub arvuti pommitamine ja pommitatud ruutude värvimine
+        Kõik meetodid, mida kasutatakse, võivad visata erindeid, seega kasutatud try and catchi, kus catchis oleks erind näha tekstiväljana
+
+         */
         vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 try {
-                    try {
-                        if (mängija.kasLäbi()) {
-                            silt.setText("Sina võitsid");
-                            popup.show(primaryStage);
-                            //juur.getChildren().add(popupiSilt.getSilt());
-                            PrintWriter pw = new PrintWriter(arvuti.getFailiNimi());
-                            pw.close();
-                            PrintWriter pw2 = new PrintWriter(mängija.getFailiNimi());
-                            pw2.close();
-                            Thread.sleep(5000);
-                            System.exit(0);
-                        }
-                    } catch (IOException | InterruptedException e) {
-                        popupiSilt.muudaSõnumit("Erind!");
-                        popup.show(primaryStage);
-                    }
                     if (!vastaseLaud.isSelleKäik()) {
                         try {
                             arvuti.arvutiPommitamine(ajalugu);
@@ -187,29 +177,27 @@ public class Graafika_Peaklass extends Application {
 
                         } catch (IOException e) {
                             popupiSilt.muudaSõnumit("Erind!");
-                            popup.show(primaryStage);
+                            abi.setScene(stseen2);
+                            abi.show();
                         }
                         try {
                             if (arvuti.kasLäbi()) {
-                                silt.setText("Kahjuks kaotasid");
-                                popup.show(primaryStage);
-                                PrintWriter pw = new PrintWriter(arvuti.getFailiNimi());
-                                pw.close();
-                                PrintWriter pw2 = new PrintWriter(mängija.getFailiNimi());
-                                pw2.close();
-                                Thread.sleep(5000);
-                                System.exit(0);
+                                popupiSilt.muudaSõnumit("Kahjuks kaotasid, lahkumiseks vajuta suure akna punast X");
+                                abi.setScene(stseen2);
+                                abi.show();
                             }
-                        } catch (IOException | InterruptedException e) {
+                        } catch (IOException e) {
                             popupiSilt.muudaSõnumit("Erind!");
-                            popup.show(primaryStage);
+                            abi.setScene(stseen2);
+                            abi.show();
                         } finally {
                             vastaseLaud.setSelleKäik(true);
                         }
                     }
                 } catch (KoordinaadiErind e) {
-                    silt.setText("Juba pommitasid seda");
-                    popup.show(primaryStage);
+                    popupiSilt.muudaSõnumit(e.getMessage());
+                    abi.setScene(stseen2);
+                    abi.show();
                 }
             }
         });

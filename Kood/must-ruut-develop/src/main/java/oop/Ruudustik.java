@@ -1,11 +1,16 @@
 package oop;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -24,14 +29,6 @@ public class Ruudustik extends Pane {
 
     public Rectangle[][] getLaud() {
         return laud;
-    }
-
-    public int getPikkus() {
-        return pikkus;
-    }
-
-    public int getLaius() {
-        return laius;
     }
 
     public void setSelleKäik(boolean selleKäik) {
@@ -65,14 +62,40 @@ public class Ruudustik extends Pane {
                         /*
                         Pane siia et kui pommitamisel tabab, muudab värvi vms
                          */
+                        Label silt = new Label("Laev põhjas");
+                        silt.setFont(Font.font("Verdana", 20));
+                        Silt popupiSilt = new Silt(silt);
+                        FlowPane pane = new FlowPane(10, 10);
+                        VBox popup = new VBox(popupiSilt.getSilt(), pane);
+                        popup.setAlignment(Pos.CENTER);
+                        Scene stseen2 = new Scene(popup, 500, 100);
+                        Stage abi = new Stage();
                         if (selleKäik) {
                             try {
-                                selleKäik = pommitamine.pommita(finalX, finalY);
+                                String tulemus = pommitamine.pommita(finalX, finalY);
+                                selleKäik = !tulemus.equals("0");
                                 if (!selleKäik) laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
-                                else laud[finalX][finalY].setFill(Color.GREEN);
+                                else {
+                                    laud[finalX][finalY].setFill(Color.GREEN);
+                                    boolean põhjas = pommitamine.kasPõhjas(tulemus);
+                                    if (põhjas) {
+                                        popupiSilt.muudaSõnumit("Laev põhjas");
+                                        abi.setScene(stseen2);
+                                        abi.show();
+                                        if (pommitamine.kasLäbi()) {
+                                            popupiSilt.muudaSõnumit("Sina võitsid!!! Lahkumiseks vajuta suure akna punast X");
+                                            abi.setScene(stseen2);
+                                            abi.show();
+                                        }
+                                    }
+                                }
 
                             } catch (KoordinaadiErind | IOException e) {
-                                Text tekst = new Text("Juba pommitasid seda");
+                                selleKäik = false;
+                                popupiSilt.muudaSõnumit(e.getMessage());
+                                abi.setScene(stseen2);
+                                abi.show();
+
                             }
                         }
 
