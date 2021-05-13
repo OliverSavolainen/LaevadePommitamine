@@ -62,13 +62,13 @@ public class Ruudustik extends Pane {
                        Siin seadistatakse sündmused, mis juhtuvad kui pommitada vastase lauda.
                          */
                         Label silt = new Label("Laev põhjas");
-                        silt.setFont(Font.font("Comic Sans MS", 30));
+                        silt.setFont(Font.font("Comic Sans MS", 15));
                         silt.setTextFill(Color.RED);
                         Silt popupiSilt = new Silt(silt);
                         FlowPane pane = new FlowPane(10, 10);
                         VBox popup = new VBox(popupiSilt.getSilt(), pane);
                         popup.setAlignment(Pos.CENTER);
-                        Scene stseen = new Scene(popup, 200, 100);
+                        Scene stseen = new Scene(popup, 400, 100);
                         Stage abi = new Stage();
                         if (selleKäik) {
                             try {
@@ -86,8 +86,8 @@ public class Ruudustik extends Pane {
                                             SINA VÕITSID! 
                                             Lahkumiseks vajuta suure akna punast X
                                             """);
-                                            silt.setFont(Font.font("Comic Sans MS", 20));
-                                            silt.setTextFill(Color.RED);
+                                            silt2.setFont(Font.font("Comic Sans MS", 20));
+                                            silt2.setTextFill(Color.RED);
                                             Silt popupiSilt2 = new Silt(silt2);
                                             FlowPane pane2 = new FlowPane(10, 10);
                                             VBox popup2 = new VBox(popupiSilt2.getSilt(), pane2);
