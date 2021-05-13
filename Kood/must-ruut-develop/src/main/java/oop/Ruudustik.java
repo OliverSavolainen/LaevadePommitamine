@@ -57,6 +57,7 @@ public class Ruudustik extends Pane {
                 laud[x][y].setStrokeType(StrokeType.INSIDE);
                 laud[x][y].setStrokeWidth(1);
                 laud[x][y].setFill(Color.LIGHTBLUE);
+                laud[x][y].setStyle("-fx-border-style: solid; -fx-border-width: 5; -fx-border-color: black; -fx-min-width: 20; -fx-min-height:20; -fx-max-width:20; -fx-max-height: 20;");
                 if (vastaseLaud) {
                     int finalX = x;
                     int finalY = y;
@@ -79,7 +80,7 @@ public class Ruudustik extends Pane {
 
                 } else {
                     if (!pommitamine.getMänguLaud()[x][y].equals(" "))
-                        laud[x][y].setFill(Color.rgb(191, 249, 255, 0.5));
+                        laud[x][y].setFill(Color.GRAY);
                 }
             }
         }

@@ -2,20 +2,25 @@
 package oop;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,9 +93,10 @@ public class Graafika_Peaklass extends Application {
         skooritekstid.add(vahe2, 0, 3);
         skooritekstid.add(tutvustus, 0, 5);
         Label silt = new Label("Sina võitsid");
+        Label võit = new Label("Sina võitsid");
         Silt popupiSilt = new Silt(silt);
         Popup popup = new Popup();
-        popup.getContent().add(silt);
+        popup.getContent().add(võit);
         popup.setAutoHide(true);
         popup.centerOnScreen();
         tutvustus.setAlignment(Pos.BOTTOM_CENTER);
@@ -103,14 +109,57 @@ public class Graafika_Peaklass extends Application {
         vahe.setAlignment(Pos.CENTER);
         juur.add(minu_tekst, 0, 0);
         juur.add(vastase_tekst, 1, 0);
+
+
+        primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent event) {
+                // luuakse teine lava
+                Stage kusimus = new Stage();
+                // küsimuse ja kahe nupu loomine
+                Label label = new Label("Kas tõesti tahad kinni panna?");
+                Button okButton = new Button("Jah");
+                Button cancelButton = new Button("Ei");
+
+                // sündmuse lisamine nupule Jah
+                okButton.setOnAction(new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent event) {
+                        kusimus.hide();
+                    }
+                });
+
+                // sündmuse lisamine nupule Ei
+                cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent event) {
+                        primaryStage.show();
+                        kusimus.hide();
+                    }
+                });
+
+                // nuppude grupeerimine
+                FlowPane pane = new FlowPane(10, 10);
+                pane.setAlignment(Pos.CENTER);
+                pane.getChildren().addAll(okButton, cancelButton);
+
+                // küsimuse ja nuppude gruppi paigutamine
+                VBox vBox = new VBox(10);
+                vBox.setAlignment(Pos.CENTER);
+                vBox.getChildren().addAll(label, pane);
+
+                //stseeni loomine ja näitamine
+                Scene stseen2 = new Scene(vBox);
+                kusimus.setScene(stseen2);
+                kusimus.show();
+            }
+        });
+
         vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 try {
                     try {
                         if (mängija.kasLäbi()) {
-                            popupiSilt.muudaSõnumit("Sina võitsid");
+                            silt.setText("Sina võitsid");
                             popup.show(primaryStage);
-                            juur.getChildren().add(popupiSilt.getSilt());
+                            //juur.getChildren().add(popupiSilt.getSilt());
                             PrintWriter pw = new PrintWriter(arvuti.getFailiNimi());
                             pw.close();
                             PrintWriter pw2 = new PrintWriter(mängija.getFailiNimi());
