@@ -7,35 +7,27 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Graafika_Peaklass extends Application {
-    boolean vastaseKäik = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene stseen = new Scene(mäng());
-        primaryStage.setScene(stseen);
-        primaryStage.setTitle("Laevade pommitamine");
-        primaryStage.setResizable(true);
-        primaryStage.sizeToScene();
-        primaryStage.show();
-        primaryStage.setMinWidth(primaryStage.getWidth());
-        primaryStage.setMinHeight(primaryStage.getHeight());
-    }
-
-    private GridPane mäng() throws IOException, InterruptedException {
         GridPane juur = new GridPane();
         Pommitamine mängija = new Pommitamine("log1.txt");
         Pommitamine arvuti = new Pommitamine("log2.txt");
@@ -75,25 +67,32 @@ public class Graafika_Peaklass extends Application {
         Label minu_tekst = new Label("Minu laud");
         Label vastase_tekst = new Label("Vastase laud");
         Label tutvustus = new Label("""
-                Teie laud luuakse randomi alusel ja siis saate hakata mängima arvuti vastu.
+                Teie laud luuakse randomi alusel (näete seda vasakul)
+                ja siis saate hakata mängima arvuti vastu.
                 Pommitamiseks vajutage vastase laua ruudul.
-                Saate pommitada kuni eksite ja siis tuleb arvuti kord.
-                Näete, kuhu arvuti pommitas iga tema korra järel.
-                Samuti näete lauda, kus kõik teie pommitamised kirjas.
-                Kui lasete ise või arvuti laseb laeva põhja, tuleb selle kohta sõnum
+                Kui ruut läheb roheliseks, saite pihta,
+                kui ei saanud, läheb see heledamaks.
+                Iga eksimuse järel uuesti pommitades näete, 
+                kuhu arvuti oma käigul vahepeal pommitas.
+                Kui ruut teie laual läks mustaks, sai arvuti pihta, 
+                kui ei, läks ruut punaseks.
+                Kui lasete ise või arvuti laseb laeva põhja, 
+                tuleb selle kohta sõnum
                 ja kui mäng lõppeb, siis tuleb ka selle kohta sõnum.
                 """);
-        Label tegevus = new Label("Sinu käik");
-        tegevus.setTextFill(Color.RED);
-        tegevus.setFont(Font.font("Verdana", 20));
-        Silt tegevusesilt = new Silt(tegevus);
+        tutvustus.setFont(Font.font("Verdana", 15));
         GridPane skooritekstid = new GridPane();
         skooritekstid.add(laevade_arv_Minu, 0, 0);
         skooritekstid.add(vahe, 0, 1);
         skooritekstid.add(laevade_arv_Vastane, 0, 2);
         skooritekstid.add(vahe2, 0, 3);
-        skooritekstid.add(tegevusesilt.getSilt(), 0, 4);
         skooritekstid.add(tutvustus, 0, 5);
+        Label silt = new Label("Sina võitsid");
+        Silt popupiSilt = new Silt(silt);
+        Popup popup = new Popup();
+        popup.getContent().add(silt);
+        popup.setAutoHide(true);
+        popup.centerOnScreen();
         tutvustus.setAlignment(Pos.BOTTOM_CENTER);
         juur.add(skooritekstid, 2, 1);
         minu_tekst.setFont(Font.font(15));
@@ -106,41 +105,73 @@ public class Graafika_Peaklass extends Application {
         juur.add(vastase_tekst, 1, 0);
         vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
-                if (!vastaseLaud.isSelleKäik()) {
+                try {
                     try {
-                        tegevus.setText("Arvuti käik");
-                        arvuti.arvutiPommitamine(ajalugu);
-                        for (int i = 0; i < 10; i++) {
-                            for (int j = 0; j < 10; j++) {
-                                if (arvuti.getMänguLaud()[i][j].equals("O")){
-                                    minuLaud.getLaud()[i][j].setFill(Color.RED);
-                                }
-                                if (arvuti.getMänguLaud()[i][j].equals("X")){
-                                    minuLaud.getLaud()[i][j].setFill(Color.BLACK);
+                        if (mängija.kasLäbi()) {
+                            popupiSilt.muudaSõnumit("Sina võitsid");
+                            popup.show(primaryStage);
+                            juur.getChildren().add(popupiSilt.getSilt());
+                            PrintWriter pw = new PrintWriter(arvuti.getFailiNimi());
+                            pw.close();
+                            PrintWriter pw2 = new PrintWriter(mängija.getFailiNimi());
+                            pw2.close();
+                            Thread.sleep(5000);
+                            System.exit(0);
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        popupiSilt.muudaSõnumit("Erind!");
+                        popup.show(primaryStage);
+                    }
+                    if (!vastaseLaud.isSelleKäik()) {
+                        try {
+                            arvuti.arvutiPommitamine(ajalugu);
+                            for (int i = 0; i < 10; i++) {
+                                for (int j = 0; j < 10; j++) {
+                                    if (arvuti.getMänguLaud()[i][j].equals("O")) {
+                                        minuLaud.getLaud()[i][j].setFill(Color.RED);
+                                    }
+                                    if (arvuti.getMänguLaud()[i][j].equals("X")) {
+                                        minuLaud.getLaud()[i][j].setFill(Color.BLACK);
+                                    }
                                 }
                             }
-                        }
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    try {
-                        if (arvuti.kasLäbi()) {
-                            tegevus.setText("Kaotasid");
-                            System.exit(0);
-                        } else {
-                            tegevus.setText("Sinu käik");
 
+                        } catch (IOException e) {
+                            popupiSilt.muudaSõnumit("Erind!");
+                            popup.show(primaryStage);
                         }
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }finally {
-                        vastaseLaud.setSelleKäik(true);
+                        try {
+                            if (arvuti.kasLäbi()) {
+                                silt.setText("Kahjuks kaotasid");
+                                popup.show(primaryStage);
+                                PrintWriter pw = new PrintWriter(arvuti.getFailiNimi());
+                                pw.close();
+                                PrintWriter pw2 = new PrintWriter(mängija.getFailiNimi());
+                                pw2.close();
+                                Thread.sleep(5000);
+                                System.exit(0);
+                            }
+                        } catch (IOException | InterruptedException e) {
+                            popupiSilt.muudaSõnumit("Erind!");
+                            popup.show(primaryStage);
+                        } finally {
+                            vastaseLaud.setSelleKäik(true);
+                        }
                     }
+                } catch (KoordinaadiErind e) {
+                    silt.setText("Juba pommitasid seda");
+                    popup.show(primaryStage);
                 }
             }
         });
-
-        return juur;
+        Scene stseen = new Scene(juur);
+        primaryStage.setScene(stseen);
+        primaryStage.setTitle("Laevade pommitamine");
+        primaryStage.setResizable(true);
+        primaryStage.sizeToScene();
+        primaryStage.show();
+        primaryStage.setMinWidth(primaryStage.getWidth());
+        primaryStage.setMinHeight(primaryStage.getHeight());
     }
 
 

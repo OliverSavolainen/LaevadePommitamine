@@ -1,9 +1,11 @@
 package oop;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 
@@ -69,7 +71,7 @@ public class Ruudustik extends Pane {
                                 else laud[finalX][finalY].setFill(Color.GREEN);
 
                             } catch (KoordinaadiErind | IOException e) {
-                                System.out.println(e.getMessage());
+                                Text tekst = new Text("Juba pommitasid seda");
                             }
                         }
 
