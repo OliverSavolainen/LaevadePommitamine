@@ -9,26 +9,21 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import javafx.stage.Popup;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Graafika_Peaklass extends Application {
 
@@ -61,24 +56,35 @@ public class Graafika_Peaklass extends Application {
         }
         juur.add(minuLaud, 0, 1);
         juur.add(vastaseLaud, 1, 1);
-
-        Label tutvustus = new Label("""
+        Label minu_tekst = new Label("Minu laud");
+        Label vastase_tekst = new Label("Vastase laud");
+        minu_tekst.setAlignment(Pos.CENTER);
+        vastase_tekst.setAlignment(Pos.CENTER);
+        juur.add(minu_tekst, 0, 0);
+        juur.add(vastase_tekst, 1, 0);
+        Label pealkiri = new Label("Laevade pommitamine");
+        Label tutvustus = new Label(""" 
+                
                 Teie laud luuakse randomi alusel (näete seda vasakul)
                 ja siis saate hakata mängima arvuti vastu.
                 Pommitamiseks vajutage vastase laua ruudul.
                 Kui ruut läheb roheliseks, saite pihta,
                 kui ei saanud, läheb see heledamaks.
-                Iga eksimuse järel uuesti pommitades näete, 
+                Olge ettevaatlikud, eelnevalt juba pommitatud ruudu
+                uuesti pommitamisel annate käigu vastasele.
+                Iga eksimuse järel uuesti pommitades näete,
                 kuhu arvuti oma käigul vahepeal pommitas.
-                Kui ruut teie laual läks mustaks, sai arvuti pihta, 
+                Kui ruut teie laual läks mustaks, sai arvuti pihta,
                 kui ei, läks ruut punaseks.
                 Kui lasete ise või arvuti laseb laeva põhja, 
                 tuleb selle kohta sõnum
                 ja kui mäng lõppeb, siis tuleb ka selle kohta sõnum.
                 """);
+        pealkiri.setFont(Font.font("Verdana", FontWeight.BOLD,35));
         tutvustus.setFont(Font.font("Verdana", 15));
         GridPane skooritekstid = new GridPane();
-        skooritekstid.add(tutvustus, 0, 0);
+        skooritekstid.add(pealkiri,0,0);
+        skooritekstid.add(tutvustus, 0, 2);
         Label silt = new Label("Sina võitsid");
         silt.setFont(Font.font("Verdana",20));
         Silt popupiSilt = new Silt(silt);

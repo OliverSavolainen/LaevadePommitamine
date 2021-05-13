@@ -2,10 +2,7 @@ package oop;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Pommitamine extends Laud {
     private String[][] mänguLaud;
@@ -32,7 +29,7 @@ public class Pommitamine extends Laud {
             }
             mänguLaud[x][y] = "X";
         } else if (mänguLaud[x][y].equals("X") || mänguLaud[x][y].equals("O")) {
-            throw new KoordinaadiErind("Juba pommitasid seda");
+            throw new KoordinaadiErind("Juba pommitasid seda, arvuti sai käigu juurde");
         } else {
             mänguLaud[x][y] = "O";
             tulemus = "0";
