@@ -29,10 +29,15 @@ public class Graafika_Peaklass extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // abilava, mida kasutatakse VBoxi loomisel
+        Stage abi = new Stage();
         GridPane juur = new GridPane();
+        //Pommitamise isendid Ruudustiku isendite loomiseks
         Pommitamine mängija = new Pommitamine("log1.txt");
         Pommitamine arvuti = new Pommitamine("log2.txt");
+        // List, mida arvutiPommitamises kasutada
         List<String> ajalugu = new ArrayList<>();
+        // Vaja, et list oleks vähemalt 2se sizega, seega lisan sinna 2 elementi
         ajalugu.add("0,0,0");
         ajalugu.add("0,0,0");
         Ruudustik minuLaud = new Ruudustik(10, 10, false, arvuti);
@@ -43,6 +48,7 @@ public class Graafika_Peaklass extends Application {
         juur.setVgap(8);
         juur.setHgap(10);
         GridPane.setConstraints(minuLaud, 0, 1);
+        //Laudade loomine
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 minuLaud.paigaldaLaud(i, j);
@@ -63,39 +69,41 @@ public class Graafika_Peaklass extends Application {
         juur.add(minu_tekst, 0, 0);
         juur.add(vastase_tekst, 1, 0);
         Label pealkiri = new Label("Laevade pommitamine");
-        Label tutvustus = new Label(""" 
-                
-                Teie laud luuakse randomi alusel (näete seda vasakul)
+        Label tutvustus = new Label( """ 
+                                
+                Teie laud luuakse suvaliselt paigutatuna (näete seda vasakul)
                 ja siis saate hakata mängima arvuti vastu.
                 Pommitamiseks vajutage vastase laua ruudul.
-                Kui ruut läheb roheliseks, saite pihta,
+                Kui ruut läheb mustaks, saite pihta,
                 kui ei saanud, läheb see heledamaks.
                 Olge ettevaatlikud, eelnevalt juba pommitatud ruudu
-                uuesti pommitamisel annate käigu vastasele.
+                uuesti pommitamisel annate käigu vastasele!
                 Iga eksimuse järel uuesti pommitades näete,
                 kuhu arvuti oma käigul vahepeal pommitas.
                 Kui ruut teie laual läks mustaks, sai arvuti pihta,
-                kui ei, läks ruut punaseks.
-                Kui lasete ise või arvuti laseb laeva põhja, 
+                kui ei, läks ruut heledamaks.
+                Kui lasete ise või arvuti laseb laeva põhja,
                 tuleb selle kohta sõnum
                 ja kui mäng lõppeb, siis tuleb ka selle kohta sõnum.
+                Meeldivat mängimist!
                 """);
-        pealkiri.setFont(Font.font("Verdana", FontWeight.BOLD,35));
-        tutvustus.setFont(Font.font("Verdana", 15));
+        pealkiri.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 35));
+        tutvustus.setFont(Font.font("Comic Sans MS", 15));
         GridPane skooritekstid = new GridPane();
-        skooritekstid.add(pealkiri,0,0);
+        skooritekstid.add(pealkiri, 0, 0);
         skooritekstid.add(tutvustus, 0, 2);
         Label silt = new Label("Sina võitsid");
-        silt.setFont(Font.font("Verdana",20));
+        silt.setFont(Font.font("Comic Sans MS", 20));
+        // Sildi isend, mille sõne saab muuta
         Silt popupiSilt = new Silt(silt);
         FlowPane pane = new FlowPane(10, 10);
-        VBox popup = new VBox(popupiSilt.getSilt(),pane);
+        // VBox, mida vaja kasutada osades olukordades, selle näitamiseks loome ka stseeni ja lava
+        VBox popup = new VBox(popupiSilt.getSilt(), pane);
         popup.setAlignment(Pos.CENTER);
-        Scene stseen2 = new Scene(popup,500,100);
-        Stage abi = new Stage();
+        Scene stseen2 = new Scene(popup, 500, 100);
+
         tutvustus.setAlignment(Pos.BOTTOM_CENTER);
         juur.add(skooritekstid, 2, 1);
-
 
 
         primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
@@ -109,6 +117,7 @@ public class Graafika_Peaklass extends Application {
                     abi.setScene(stseen2);
                     abi.show();
                 }
+                assert pw != null;
                 pw.close();
                 PrintWriter pw2 = null;
                 try {
@@ -150,7 +159,7 @@ public class Graafika_Peaklass extends Application {
                 // küsimuse ja nuppude gruppi paigutamine
                 VBox vBox = new VBox(10);
                 vBox.setAlignment(Pos.CENTER);
-                vBox.getChildren().addAll(label, pane,label2);
+                vBox.getChildren().addAll(label, pane, label2);
 
                 //stseeni loomine ja näitamine
                 Scene stseen2 = new Scene(vBox);
@@ -166,46 +175,52 @@ public class Graafika_Peaklass extends Application {
          */
         vastaseLaud.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
-                try {
-                    if (!vastaseLaud.isSelleKäik()) {
-                        try {
-                            arvuti.arvutiPommitamine(ajalugu);
-                            for (int i = 0; i < 10; i++) {
-                                for (int j = 0; j < 10; j++) {
-                                    if (arvuti.getMänguLaud()[i][j].equals("O")) {
-                                        minuLaud.getLaud()[i][j].setFill(Color.RED);
-                                    }
-                                    if (arvuti.getMänguLaud()[i][j].equals("X")) {
-                                        minuLaud.getLaud()[i][j].setFill(Color.BLACK);
+                    try {
+                        // Kui !vastaseLaud.isSelleKäik(), siis mängija on vajutanud ja eksinud viimati
+                        if (!vastaseLaud.isSelleKäik()) {
+                            try {
+                                // kutsutakse välja arvutiPommitamine ja värvitakse käigul pommitatud ruudud
+                                arvuti.arvutiPommitamine(ajalugu);
+                                for (int i = 0; i < 10; i++) {
+                                    for (int j = 0; j < 10; j++) {
+                                        if (arvuti.getMänguLaud()[i][j].equals("O")) {
+                                            minuLaud.getLaud()[i][j].setFill(Color.rgb(191, 249, 255, 0.5));
+                                        }
+                                        if (arvuti.getMänguLaud()[i][j].equals("X")) {
+                                            minuLaud.getLaud()[i][j].setFill(Color.BLACK);
+                                        }
                                     }
                                 }
-                            }
 
-                        } catch (IOException e) {
-                            popupiSilt.muudaSõnumit("Erind!");
-                            abi.setScene(stseen2);
-                            abi.show();
-                        }
-                        try {
-                            if (arvuti.kasLäbi()) {
-                                popupiSilt.muudaSõnumit("Kahjuks kaotasid, lahkumiseks vajuta suure akna punast X");
+                            } catch (IOException e) {
+                                popupiSilt.muudaSõnumit("Erind!");
                                 abi.setScene(stseen2);
                                 abi.show();
                             }
-                        } catch (IOException e) {
-                            popupiSilt.muudaSõnumit("Erind!");
-                            abi.setScene(stseen2);
-                            abi.show();
-                        } finally {
-                            vastaseLaud.setSelleKäik(true);
+                            // kui arvuti võidab mängu, tuleb VBoxiga vastav sõnum
+                            try {
+                                if (arvuti.kasLäbi()) {
+                                    popupiSilt.muudaSõnumit("""
+                                            Kahjuks kaotasid.
+                                            Lahkumiseks vajuta suure akna punast X""");
+                                    abi.setScene(stseen2);
+                                    abi.show();
+                                }
+                            } catch (IOException e) {
+                                popupiSilt.muudaSõnumit("Erind!");
+                                abi.setScene(stseen2);
+                                abi.show();
+                            } finally {
+                                // Kui arvuti käik tehtud, saab mängija käigu tagasi
+                                vastaseLaud.setSelleKäik(true);
+                            }
                         }
+                    } catch (KoordinaadiErind e) {
+                        popupiSilt.muudaSõnumit(e.getMessage());
+                        abi.setScene(stseen2);
+                        abi.show();
                     }
-                } catch (KoordinaadiErind e) {
-                    popupiSilt.muudaSõnumit(e.getMessage());
-                    abi.setScene(stseen2);
-                    abi.show();
                 }
-            }
         });
         Scene stseen = new Scene(juur);
         primaryStage.setScene(stseen);

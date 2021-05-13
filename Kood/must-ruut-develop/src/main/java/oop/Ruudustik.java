@@ -42,7 +42,7 @@ public class Ruudustik extends Pane {
         this.vastaseLaud = vastaseLaud;
         this.pommitamine = pommitamine;
         laud = new Rectangle[laius][pikkus];
-        // Initializes new board
+        // Tekitab laua
         for (int x = 0; x < laius; x++) {
             for (int y = 0; y < pikkus; y++) {
                 laud[x][y] = new Rectangle();
@@ -54,21 +54,21 @@ public class Ruudustik extends Pane {
                 laud[x][y].setStrokeType(StrokeType.INSIDE);
                 laud[x][y].setStrokeWidth(1);
                 laud[x][y].setFill(Color.LIGHTBLUE);
-                laud[x][y].setStyle("-fx-border-style: solid; -fx-border-width: 5; -fx-border-color: black; -fx-min-width: 20; -fx-min-height:20; -fx-max-width:20; -fx-max-height: 20;");
                 if (vastaseLaud) {
                     int finalX = x;
                     int finalY = y;
                     laud[x][y].setOnMouseClicked(event -> {
                         /*
-                        Pane siia et kui pommitamisel tabab, muudab värvi vms
+                       Siin seadistatakse sündmused, mis juhtuvad kui pommitada vastase lauda.
                          */
                         Label silt = new Label("Laev põhjas");
-                        silt.setFont(Font.font("Verdana", 20));
+                        silt.setFont(Font.font("Comic Sans MS", 30));
+                        silt.setTextFill(Color.RED);
                         Silt popupiSilt = new Silt(silt);
                         FlowPane pane = new FlowPane(10, 10);
                         VBox popup = new VBox(popupiSilt.getSilt(), pane);
                         popup.setAlignment(Pos.CENTER);
-                        Scene stseen2 = new Scene(popup, 500, 100);
+                        Scene stseen = new Scene(popup, 200, 100);
                         Stage abi = new Stage();
                         if (selleKäik) {
                             try {
@@ -76,24 +76,39 @@ public class Ruudustik extends Pane {
                                 selleKäik = !tulemus.equals("0");
                                 if (!selleKäik) laud[finalX][finalY].setFill(Color.rgb(191, 249, 255, 0.5));
                                 else {
-                                    laud[finalX][finalY].setFill(Color.GREEN);
+                                    laud[finalX][finalY].setFill(Color.BLACK);
                                     boolean põhjas = pommitamine.kasPõhjas(tulemus);
                                     if (põhjas) {
-                                        popupiSilt.muudaSõnumit("Laev põhjas");
-                                        abi.setScene(stseen2);
+                                        abi.setScene(stseen);
                                         abi.show();
                                         if (pommitamine.kasLäbi()) {
-                                            popupiSilt.muudaSõnumit("Sina võitsid!!! Lahkumiseks vajuta suure akna punast X");
-                                            abi.setScene(stseen2);
-                                            abi.show();
+                                            Label silt2 = new Label("""
+                                            SINA VÕITSID! 
+                                            Lahkumiseks vajuta suure akna punast X
+                                            """);
+                                            silt.setFont(Font.font("Comic Sans MS", 20));
+                                            silt.setTextFill(Color.RED);
+                                            Silt popupiSilt2 = new Silt(silt2);
+                                            FlowPane pane2 = new FlowPane(10, 10);
+                                            VBox popup2 = new VBox(popupiSilt2.getSilt(), pane2);
+                                            popup2.setAlignment(Pos.CENTER);
+                                            Scene stseen2 = new Scene(popup2, 500, 100);
+                                            Stage abi2 = new Stage();
+                                            abi2.setScene(stseen2);
+                                            abi2.show();
                                         }
                                     }
                                 }
 
-                            } catch (KoordinaadiErind | IOException e) {
+
+                            }
+                            /*
+                            Eelnevalt pommitatud ruudu erindi püüdmine
+                             */
+                            catch (KoordinaadiErind | IOException e) {
                                 selleKäik = false;
                                 popupiSilt.muudaSõnumit(e.getMessage());
-                                abi.setScene(stseen2);
+                                abi.setScene(stseen);
                                 abi.show();
 
                             }
@@ -101,7 +116,11 @@ public class Ruudustik extends Pane {
 
                     });
 
-                } else {
+                }
+                /*
+                Mängija laevad muudetakse halliks
+                 */
+                else {
                     if (!pommitamine.getMänguLaud()[x][y].equals(" "))
                         laud[x][y].setFill(Color.GRAY);
                 }
@@ -109,7 +128,7 @@ public class Ruudustik extends Pane {
         }
     }
 
-
+    // Siin meetodis paigaldatakse eraldi ruudud juurde
     public void paigaldaLaud(final int i, final int j) {
         getChildren().add(laud[i][j]);
     }
